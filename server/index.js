@@ -1,11 +1,9 @@
+const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
-const http = require('http');
 const cors = require('cors');
 
-const { addUser, removeUser, getUser, getUsersInRoom } = require('./users.js');
-
-const PORT = process.env.port || 5000
+const { addUser, removeUser, getUser, getUsersInRoom } = require('./users');
 
 const router = require('./router');
 
@@ -13,8 +11,8 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
-app.use(router);
 app.use(cors());
+app.use(router);
 
 io.on('connection', (socket) => {
     socket.on('join', ({ name, room }, callback) => {
@@ -50,5 +48,4 @@ io.on('connection', (socket) => {
     })
 });
 
-
-server.listen(PORT, () => console.log(`Server has started on port ${PORT}`));
+server.listen(process.env.PORT || 5000, () => console.log(`Server has started.`));
